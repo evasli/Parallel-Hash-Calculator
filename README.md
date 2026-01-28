@@ -8,7 +8,7 @@ This project implements a multi-stage pipeline that processes a stream of JSON d
 <h2>C++ Components (The Producer/Consumer)</h2>
 <ul>
     <li><strong>OpenSSL:</strong> Low-level SHA512 cryptographic calculations.</li>
-    <li><strong>Intel OneTBB:</strong> Task-based parallelism and pipeline orchestration.</li>
+    <li><strong>Intel OneTBB:</strong> Task-based parallelism and pipeline management.</li>
     <li><strong>simdjson & nlohmann/json:</strong> High-performance JSON parsing.</li>
     <li><strong>SimpleAmqpClient:</strong> C++ wrapper for RabbitMQ communication.</li>
 </ul>
@@ -27,7 +27,7 @@ This project implements a multi-stage pipeline that processes a stream of JSON d
 </ul>
 
 <p>
-The <code>data.json</code> file contains 1200 lines of strings that have 10000 symbols (~10 kB). In order to achieve the requirement (one Python worker must calculate all SHA256 for at least 60 seconds) strings are repeated to increase their size (<code>scale_factor=10000</code>). So, before SHA512 and SHA256 strings are made into ~100 MB texts while communication using RabbitMQ still uses the initial smaller strings.
+The <code>data.json</code> file contains 1200 lines of strings that have 10000 symbols (~10 kB each string). In order to achieve the requirement (one Python worker must calculate all SHA256 for at least 60 seconds) strings are repeated to increase their size (<code>scale_factor=10000</code>). So, before SHA512 and SHA256 calculations strings are made into ~100 MB texts while communication using RabbitMQ still uses the initial smaller strings.
 </p>
 
 <p>
@@ -35,7 +35,7 @@ Huge strings are not generated in the beginning because communication over Rabbi
 </p>
 
 <p>
-Testing was conducted on an Intel i5-1235U (10 Physical Cores / 12 Logical Cores) with 32 GB RAM. Results are given in the table below.
+Testing was conducted on an Intel i5-1235U (10 physical cores / 12 logical cores) with 32 GB RAM. Results are given in the table below.
 </p>
 
 <img width="900" height="434" alt="Parallel results" src="https://github.com/user-attachments/assets/ee4c1418-bf21-4841-875d-5d1de619b21e" />
@@ -43,7 +43,7 @@ Testing was conducted on an Intel i5-1235U (10 Physical Cores / 12 Logical Cores
 
 
 <p>
-Parallel benchmarks revealed that the optimal performance was achieved when the total number of threads/processes exceeded the logical core count (15 units total: 9 C++ threads + 6 Ray actors).
+Parallel benchmarks revealed that the optimal performance was achieved when the total number of threads/processes exceeded the logical core count (15 units total: 9 C++ threads + 6 Ray actors). Certain computations were bypassed because they could not improve upon the current best result.
 </p>
 
 <p>
