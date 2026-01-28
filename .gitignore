@@ -1,0 +1,15 @@
+# Visual Studio files
+.vs/
+
+# vcpkg installed packages
+vcpkg_installed/
+
+# Build folders
+out/
+build/
+
+# Compiled object files
+*.obj
+*.exe
+*.pdb
+*.ilk
